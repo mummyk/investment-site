@@ -1,0 +1,40 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+{% include 'general/policies/t&c.html' %}
+
+<div class="form-modal"> 
+    <div class="form-toggle">
+        <button id="login-toggle" onclick="toggleLogin()">{% trans "Sign Up" %}</button>
+    </div>
+    <div id="login-form">
+        <form id="signup_form" method="post" action="{% url 'account_signup' %}">
+           {% csrf_token %}
+           {% for field in form %}
+          {{ field }}
+          {% for errors in field.errors %}
+          <p class="text-danger">{{ errors }}</p>
+          {% endfor %}
+          {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+            {% endfor %}
+              {% if form.errors %}
+          {% for error in form.non_field_errors %}
+              <div class="text-danger">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+      {% endif %}
+            <button type="submit" class="btn signup">{% trans "Sign Up" %}</button>
+            <p>Already have an  <strong>account</strong> with us <a href="{% url 'account_login' %}">{% trans "Sign in" %}</a>.</p>
+            <p>Clicking <strong>{% trans "Sign Up" %}</strong> means that you are agree to our <!-- Button trigger modal --> <a data-toggle="modal" data-target="#t&cModal" href="javascript:void(0)">terms of services</a>.</p>
+            <hr/> 
+        </form>
+    </div>
+</div>
+{% endblock %}

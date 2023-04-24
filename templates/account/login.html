@@ -1,0 +1,47 @@
+{% extends "account/base.html" %} 
+{% load i18n %}
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block content %}
+
+
+<div class="form-modal"> 
+    <div class="form-toggle">
+        <button id="login-toggle" onclick="toggleLogin()">{% trans "Sign In" %}</button>
+    </div>
+
+    <div id="login-form">
+        <form method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+          {% for field in form %}
+          {{ field }}
+          {% if redirect_field_value %}
+            <input
+              type="hidden"
+              name="{{ redirect_field_name }}"
+              value="{{ redirect_field_value }}"
+            />
+          {% endif %}
+            {% endfor %}
+            {% if form.errors %}
+          {% for field in form %}
+              {% for error in field.errors %}
+                  <div class="text-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+              <div class="text-danger">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+      {% endif %}
+            <button type="submit" class="btn login">{% trans "Sign In" %}</button>
+            <p><a href="{% url 'account_reset_password' %}">{% trans 'Forgot Password?' %}</a></p>
+            <p>New here <strong>create an account</strong> with us <a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>.</p>
+            <hr/>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
