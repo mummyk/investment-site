@@ -15,4 +15,4 @@ def dashboard(request):
 
 def termsAndCondition(request):
    context = {"title":'Terms & Conditions'}
-   return render(request, "/general/t&c.html")
+   return render(request, "general/t&c.html")

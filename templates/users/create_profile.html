@@ -1,0 +1,103 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="row pt-5">
+   <p class="text">
+          {% blocktrans %}Your information is safe and secure with us
+         {% endblocktrans %}
+        </p>
+   <div class="col-12 mb-4">
+      <div class="card border-0 shadow components-section">
+         <div class="card-body">     
+            <div class="row mb-4">
+               <div class="col-lg-9 col-sm-6">
+                   <!--Email Form -->
+                  <div class="mb-3">
+                     <label for="disabledTextInput">Email</label>
+                     <input type="text" id="disabledTextInput" class="form-control is-valid" placeholder="{{user.email}}" disabled>
+                     <div class="valid-feedback">
+                        Email set.
+                     </div>   
+                  </div>
+                  <!-- End of Form -->
+                  <!-- Fullname Form -->
+                  <div class="mb-3">
+                     <label for="disabledTextInput">Full Name</label>
+                     <input type="text" id="disabledTextInput" class="form-control is-valid" placeholder="{{user.first_name}} {{user.last_name}}" disabled>
+                     <div class="valid-feedback">
+                        Full name set.
+                     </div>   
+                  </div>                                   
+                  <!-- End of Form -->
+                  <!-- Username Form -->
+                  <div class="mb-3">
+                     <label for="disabledTextInput">Username</label>
+                     <input type="text" id="disabledTextInput" class="form-control is-valid" placeholder="{{user.username}}" disabled>
+                     <div class="valid-feedback">
+                        Username set.
+                     </div>   
+                  </div>                        
+                  <!-- End of Form -->
+                  <!-- Birthday Form -->
+                  <form id="" method="post" action="{% url 'create_profile' %}">
+                     {% csrf_token %}
+                     <div class="mb-3">
+                        <label for="birthday">Birthday</label>
+                        <div class="input-group">
+                           <span class="input-group-text">
+                              <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                           </span>
+                           {{form.date_of_birth}}    
+                        </div>
+                     </div>
+                     <!-- End of Form -->
+                     <!-- Gender Form -->
+                     <div class="mb-4">
+                           <label class="my-1 me-2" for="country">Gender</label>
+                           {{form.gender}}
+                     </div>
+                     <!-- End of Form -->
+                     <!-- Phone Numer Form -->
+                     <div class="mb-4">
+                           <label for="usernameValidate">Phone Numer</label>
+                           {{form.phone_number}}
+                     </div>
+                     <!-- End of Form -->
+                     <!-- Country Form -->
+                     <div class="mb-4">
+                           <label class="my-1 me-2" for="country">Country</label>
+                           {{form.country}}
+                           <i class="{{ country.flag_css }}"></i>
+                     </div>
+                     <!-- End of Form -->
+                     <!-- State Form -->
+                     <div class="mb-4">
+                        <label for="usernameValidate">State</label>
+                        {{form.state}}             
+                     </div>
+                     <!-- End of Form -->
+                     <!-- City Form -->
+                     <div class="mb-4">
+                        <label for="usernameValidate">City</label>
+                        {{form.city}}             
+                     </div>
+                     <!-- End of Form -->
+                     <!-- Address Form -->
+                     <div class="mb-4">
+                        <label for="usernameValidate">Address</label>
+                        {{form.address}}             
+                     </div>
+                     <!-- End of Form -->
+                     <button class="btn btn-success text-light" type="submit">{% trans "Create" %} &raquo;</button>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{% endblock content %}
+   

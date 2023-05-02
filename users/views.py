@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from allauth.account.models import EmailAddress
 from django.conf import settings
 from .models import UserInfoModel
-from referrals.models import ReferralModel
+from referral.models import ReferralModel
 from .forms import ClientInfoForm
 
 # Create your views here.
@@ -31,9 +31,9 @@ def profiles(request):
         context = {'title': 'Profile', 'profile': profile,
                    'referral_code': referral_code, 'verified': verified, }
     else:
-        return redirect('/client/create_profile')
+        return redirect('create_profile')
 
-    return render(request, 'client/profile_display.html', context)
+    return render(request, 'users/view_profile.html', context)
 
 
 @login_required
@@ -49,14 +49,15 @@ def create_profile(request):
             profile.save()
             messages.success(request, 'Profile creation successful')
             return redirect(to='/dashboard')
+        else:
+            messages.error(request, 'Profile creation unsuccessful')
     else:
-        messages.error(request, 'Profile creation unsuccessful')
         profile_form = ClientInfoForm(
             request.POST or None, request.FILES or None)
 
     context = {'title': 'Create Profile', 'form': profile_form,
                'prof': profiles}
-    return render(request, 'client/create_profile.html', context)
+    return render(request, 'users/create_profile.html', context)
 
 
 @ login_required
@@ -70,12 +71,12 @@ def edit(request):
                 profile_form.save()
                 messages.success(
                     request, 'Your profile is updated successfully')
-                return redirect(to='/client/profiles')
+                return redirect(to='/profiles')
         profile = UserInfoModel.objects.get(user=request.user)
         profile_form = ClientInfoForm(instance=profile)
 
         context = {'title': 'Edit', 'form': profile_form,
                    'prof': profiles}
     else:
-        return redirect('/client/create_profile')
-    return render(request, 'client/edit_profile.html', context)
+        return redirect('/create_profile')
+    return render(request, 'users/edit_profile.html', context)

@@ -19,25 +19,25 @@ class SignupForm(forms.Form):
 
 
 class ClientInfoForm(forms.ModelForm):
-    date_of_birth = forms.DateField(label="", widget=forms.DateTimeInput(attrs={'placeholder': 'Select Your date of birth', 'type': 'text', 'onfocus': "(this.type='date')", 'class': "datepicker p-2",
+    date_of_birth = forms.DateField(label="", widget=forms.DateTimeInput(attrs={'placeholder': 'dd/mm/yyyy', 'type': 'text', 'onfocus': "(this.type='date')", 'class': "form-control",'id':"birthday",
                                                                                 }))
     gender = forms.ChoiceField(choices=UserInfoModel.GENDER_CHOICE,
-                               label="", widget=forms.Select(attrs={'class': 'bootstrap-select p-2', 'placeholder': 'Select Gender'}))
+                               label="", widget=forms.Select(attrs={'class': 'form-select', 'placeholder': 'Select Gender'}))
     phone_number = forms.CharField(label="", widget=forms.TextInput(
-        attrs={'class': 'form', 'placeholder': 'Enter phone number'}))
+        attrs={'class': 'form-control', 'type': 'text','placeholder': 'Enter phone number'}))
     address = forms.CharField(label="", widget=forms.TextInput(
-        attrs={'class': 'form', 'placeholder': 'Enter address'}))
+        attrs={'class': 'form-control', 'type': 'text','placeholder': 'Enter address'}))
     state = forms.CharField(label="", widget=forms.TextInput(
-        attrs={'class': 'form', 'placeholder': 'Enter your state'}))
+        attrs={'class': 'form-control', 'type': 'text','placeholder': 'Enter your state'}))
 
     city = forms.CharField(label="", widget=forms.TextInput(
-        attrs={'class': 'form', 'placeholder': 'Enter Your city'}))
+        attrs={'class': 'form-control', 'type': 'text','placeholder': 'Enter Your city'}))
 
     class Meta:
         model = UserInfoModel
         fields = ['date_of_birth', 'phone_number',
                   'gender', 'address', 'country', 'state', 'city']
-        widgets = {'country': CountrySelectWidget(attrs={'class': 'p-2'})}
+        widgets = {'country': CountrySelectWidget(attrs={'class': 'form-select'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

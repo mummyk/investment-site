@@ -21,6 +21,7 @@
     {% endblock %}
   </head>
   <body>
+    {% include 'account/navbar.html' %}
     {% block body %}
 
     {% if messages %}{% for message in messages %}

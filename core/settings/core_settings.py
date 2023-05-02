@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'deposit',
     'withdraw',
     'income',
+    'referral',
    
     # third party apps
     "django_htmx",
@@ -184,5 +185,8 @@ REST_SESSION_LOGIN = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SignupForm'
+
+# Setting Up country flags
+COUNTRIES_FLAG_URL = 'flags/{code}_32.png'
 
 

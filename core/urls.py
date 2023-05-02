@@ -18,11 +18,18 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
     # Third party apps
     path('__debug__/', include('debug_toolbar.urls')),
     path('accounts/', include('allauth.urls')),
-    
+
     # My apps
     path('', include('general.urls')),
+    path('', include('users.urls')),
 ]
+
+
+handler400 = "helper.views.handle_400_error"
+handler403 = "helper.views.handle_403_error"
+handler404 = "helper.views.handle_404_error"
+handler500 = "helper.views.handle_500_error"
