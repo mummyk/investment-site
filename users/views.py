@@ -6,11 +6,12 @@ from django.conf import settings
 from .models import UserInfoModel
 from referral.models import ReferralModel
 from .forms import ClientInfoForm
-
+from django_countries import countries
+from django.db.models import Count
 # Create your views here.
 
 # The client profile
-
+COUNTRY_DICT = dict(countries)
 
 @login_required
 def profiles(request):
@@ -19,7 +20,7 @@ def profiles(request):
     try:
         referral_code = ReferralModel.objects.all()
         referral_code = referral_code.get(user=request.user).code
-        referral_code = f'{settings.ALLOWED_HOSTS[0]}/{referral_code}'
+        referral_code = f'{settings.ALLOWED_HOSTS[0]}/referrals/{referral_code}'
 
         # get email verified
         if EmailAddress.objects.filter(user=request.user, verified=True).exists():
@@ -27,9 +28,20 @@ def profiles(request):
     except:
         messages.info(request, 'You have no referral code')
     profile = UserInfoModel.objects.filter(user=request.user)
+    
+
+    qs = profile.values('country').annotate(
+        number = Count('pk')
+    ).order_by('country')
+
+    result = {
+        COUNTRY_DICT[q['country']]
+        for q in qs
+    }
+    context = {"result":result}
     if profile.exists():
         context = {'title': 'Profile', 'profile': profile,
-                   'referral_code': referral_code, 'verified': verified, }
+                   'referral_code': referral_code, 'verified': verified, "result":result}
     else:
         return redirect('create_profile')
 
@@ -48,7 +60,7 @@ def create_profile(request):
             profile.user = request.user
             profile.save()
             messages.success(request, 'Profile creation successful')
-            return redirect(to='/dashboard')
+            return redirect(to='/profile')
         else:
             messages.error(request, 'Profile creation unsuccessful')
     else:

@@ -26,6 +26,7 @@ urlpatterns = [
     # My apps
     path('', include('general.urls')),
     path('', include('users.urls')),
+    path('', include('referral.urls')),
 ]
 
 

@@ -12,16 +12,16 @@ from django.utils.translation import gettext as _
 
 class UserInfoModel(models.Model):
     GENDER_CHOICE = (
-        ("None", _("Select your gender")),
-        ("MALE", _("Male")),
-        ("FEMALE", _("Female")),
-        ("OTHERS", _("Others")),
+        ("Select your gender", _("None")),
+        ("Male", _("MALE")),
+        ("Female", _("FEMALE")),
+        ("Others", _("OTHERS")),
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_of_birth = models.DateField(_('Your Date of Birth'), null=True)
     gender = models.CharField(
-        _('Your gender'), choices=GENDER_CHOICE, max_length=10)
+        _('Your gender'), choices=GENDER_CHOICE, max_length=18)
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$', message="Please enter your country code and your phone number.")
     phone_number = models.CharField(_('Your Phone Number'),
