@@ -289,6 +289,18 @@ body {
    transform: translateY(2px);
 }
 
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+   from {
+      opacity: 0;
+   }
+
+   to {
+      opacity: 1;
+   }
+}
+
 @media only screen and (max-width:500px) {
    .form-modal {
       width: 100%;
