@@ -27,6 +27,8 @@ urlpatterns = [
     path('', include('general.urls')),
     path('', include('users.urls')),
     path('', include('referral.urls')),
+    path('', include('deposit.urls')),
+    path('', include('withdraw.urls')),
 ]
 
 

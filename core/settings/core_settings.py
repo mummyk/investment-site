@@ -33,6 +33,9 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
 
+#site name
+SITE_NAME = "Trusty Trade"
+
 
 # Application definition
 

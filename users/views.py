@@ -18,8 +18,7 @@ def profiles(request):
     referral_code = ''
     verified: bool = False
     try:
-        referral_code = ReferralModel.objects.all()
-        referral_code = referral_code.get(user=request.user).code
+        referral_code = ReferralModel.objects.get(user=request.user).code
         referral_code = f'{settings.ALLOWED_HOSTS[0]}/referrals/{referral_code}'
 
         # get email verified
@@ -60,7 +59,7 @@ def create_profile(request):
             profile.user = request.user
             profile.save()
             messages.success(request, 'Profile creation successful')
-            return redirect(to='/profile')
+            return redirect(to='/profiles')
         else:
             messages.error(request, 'Profile creation unsuccessful')
     else:
@@ -75,17 +74,18 @@ def create_profile(request):
 @ login_required
 def edit(request):
     if UserInfoModel.objects.filter(user=request.user).exists():
+        profile = UserInfoModel.objects.get(user=request.user)
+        profile_form = ClientInfoForm(instance=profile)
         if request.method == 'POST':
             profile_form = ClientInfoForm(
-                request.POST, request.FILES, instance=request.user.profile)
+                request.POST or None, instance=request.user.profile)
 
             if profile_form.is_valid():
                 profile_form.save()
                 messages.success(
                     request, 'Your profile is updated successfully')
                 return redirect(to='/profiles')
-        profile = UserInfoModel.objects.get(user=request.user)
-        profile_form = ClientInfoForm(instance=profile)
+        
 
         context = {'title': 'Edit', 'form': profile_form,
                    'prof': profiles}
