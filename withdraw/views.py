@@ -164,13 +164,15 @@ def get_balance(request):
     # get date of the first deposit
     if Deposit.objects.all().exists() or Withdrawal.objects.all().exists:
         deposit = Deposit.objects.all()
-        deposit = deposit.filter(user=request.user, pending=False)
+        deposit = deposit.filter(user=request.user,  pending = False, rejected = False)
         withdraw = Withdrawal.objects.all()
-        withdraw = withdraw.filter(user=request.user, pending=False)
+        withdraw = withdraw.filter(user=request.user,  pending = False, rejected = False)
         first_deposit = deposit.first()
+        
         # get total deposit and withdraw
         total_deposit = deposit.aggregate(Sum('amount'))
         total_withdraw = withdraw.aggregate(Sum('amount'))
+        
         # get the available balance
         if deposit:
             available_balance = {

@@ -39,6 +39,8 @@ class Bonus(models.Model):
     bonuses = models.FloatField(_("User bonus"))
     bonus_type = models.CharField(
         _("Bonus value"), max_length=10, choices=VALUE)
+    expires = models.DateTimeField(_('Expires'))
+    expired = models.BooleanField(_('Expired'), default=False)
     created = models.DateTimeField(_('Created'), auto_now_add=True,)
 
     def __str__(self):
