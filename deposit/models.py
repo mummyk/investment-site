@@ -10,18 +10,20 @@ from django.contrib import admin
 # Create your models here.
 
 class Deposit(models.Model):
-    Wallet_type = ((_('Basic'), _('Basic')),
-                     (_('Copper'), _('Copper')),)
-   user = models.ForeignKey(User, verbose_name=_("Users_info"), on_delete=models.CASCADE)
-   transaction_id = models.CharField(_("Transaction ID"), max_length=200, blank=True)
-   wallet = models.CharField(_("Wallet ID"), max_length=200)
-   amount = models.FloatField(_("Amount"))
-   pending = models.BooleanField(_("Pending Transactions"), default=True)
-   rejected = models.BooleanField(_("Rejected/Canceled Transactions"), default=False)
-   created = models.DateTimeField(_('Created'), auto_now_add=True)
+    WALLET_TYPE =  (
+        (_('USDT (ERC20)'), _('usdt_ecr')),
+        (_('USDT (TRC20)'), _('usdt_trc')),
+    )
+    user = models.ForeignKey(User, verbose_name=_("Users_info"), on_delete=models.CASCADE)
+    transaction_id = models.CharField(_("Transaction ID"), max_length=200, blank=True)
+    wallet = models.CharField(_("Wallet ID"), choices=WALLET_TYPE, max_length=200)
+    amount = models.FloatField(_("Amount"))
+    pending = models.BooleanField(_("Pending Transactions"), default=True)
+    rejected = models.BooleanField(_("Rejected/Canceled Transactions"), default=False)
+    created = models.DateTimeField(_('Created'), auto_now_add=True)
 
-   def __str__(self):
-      return self.user.email + '--' + self.created.strftime('%A')
+    def __str__(self):
+        return self.user.email + '--' + self.created.strftime('%A')
    
    
    
