@@ -1,11 +1,10 @@
 {% extends 'main/base.html' %} 
 {% load static %}
 {% block content %}
-{% include 'deposit/deposit_form.html' %}
 <div class="py-3">
-   <button class="btn btn-gray-800 d-inline-flex align-items-center me-2 " data-toggle="modal" data-target="#deposit_model">
+   <button class="btn btn-gray-800 d-inline-flex align-items-center me-2">
       <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-         Deposit
+        <a href="{% url 'add_deposit' %}"> Deposit </a>
    </button>
 </div>
 <div class="row">

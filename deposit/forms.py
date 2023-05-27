@@ -4,7 +4,7 @@ from .models import Deposit
 
 class DepositForm(forms.ModelForm):
     amount = forms.FloatField(required=True, label="", widget=forms.TextInput(
-        attrs={'class': 'title flex-1 w-full px-4 py-3 bg-gray-200 rounded-xl', 'placeholder': 'Enter amount'}))
+        attrs={'class': 'form-control form-control-lg','type':'number', 'placeholder': 'Enter amount'}))
 
     class Meta:
         model = Deposit

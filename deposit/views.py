@@ -1,24 +1,15 @@
 from django.shortcuts import render, redirect
-from yahoofinancials import YahooFinancials as yf
 from django.contrib.auth.decorators import login_required
 from referral.models import ReferralModel
 from .models import Wallet, Deposit
 from .forms import DepositForm
 from django.db.models import Sum
 from django.contrib import messages
-import urllib.request
 from django.conf import settings
 
 # Create your views here.
 @login_required
 def deposit_transaction(request):
-    btcRate = 0
-    ethRate = 0
-    investment_minimum = 1000
-    investment_maximum = 10000000000
-    btc = ''
-    eth = ''
-    usdt = ''
     site_name = settings.SITE_NAME
     
     # Get all deposit, withdraws and profit
@@ -69,81 +60,83 @@ def deposit_transaction(request):
         deposit_history = 0.00
         last_deposit = 0.00
 
-    if connect():
-        try:
-            cryptocurrencies = ['BTC-USD', 'ETH-USD']
-            crypto = yf(cryptocurrencies)
-            yc = crypto.get_current_price()
-            btcRate = yc['BTC-USD']+(yc['BTC-USD']*0.01)
-            ethRate = yc['ETH-USD']+(yc['ETH-USD']*0.1)
-            
-        except:
-            messages.error(request, 'You are not online')
-    else:
-        messages.error(request, 'You are offline')
 
+
+    context = {'title': 'Deposit', 'deposits': True, 'data': deposit_history, 'total_actual_deposit': total_actual_deposit,
+               'total_pending': total_deposit_pending_arg, 'total_rejected': total_deposit_rejected_arg,"total_deposit":total_deposit,
+                "last_deposit":last_deposit,"site_name":site_name
+               }
+    return render(request, 'deposit/deposits.html', context)
+
+
+
+def addDeposit(request):
+    investment_minimum = 10
+    investment_maximum = 10000000000
+    usdt_eth = ''
+    usdt_trc = ''
+    site_name = settings.SITE_NAME
+    
     wallet = Wallet.objects.all()
 
-    if ReferralModel.objects.all().exists:
-        ref = ReferralModel.objects.all()
-        if ref.filter(user=request.user).exists():
-            ref_user = ref.get(user=request.user)
-            if wallet.filter(name=ref_user.referred).exists():
-                user_wallet = wallet.get(name=ref_user.referred)
-            else:
-                user_wallet = wallet.get(name='main')
-            addresses = {'bitcoin': user_wallet.bitcoin,
-                         'etherium': user_wallet.etherium,
-                         'usdt': user_wallet.usdt}
-            btc = addresses['bitcoin']
-            eth = addresses['etherium']
-            usdt = addresses['usdt']
-        else:
-            user_wallet = wallet.get(name='main')
-            addresses = {'bitcoin': user_wallet.bitcoin,
-                         'etherium': user_wallet.etherium,
-                         'usdt': user_wallet.usdt}
-            btc = addresses['bitcoin']
-            eth = addresses['etherium']
-            usdt = addresses['usdt']
 
-        messages.info(request, 'Wallet generated on main-net')
+    user_wallet = wallet.get(name='main')
+    addresses = {'usdt_eth': user_wallet.usdt_ecr,'usdt_trc': user_wallet.usdt_trc}
+    usdt_eth = addresses['usdt_eth']
+    usdt_trc = addresses['usdt_trc']
 
-    else:
+    messages.info(request, 'Wallet generated on main-net')
 
-        messages.error(request, 'No wallet available at the moment')
 
+    
+    # Deposit form
     form = DepositForm(request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():
             amount = float(form['amount'].value())
+            
             if amount < investment_minimum-0.01 or amount > investment_maximum:
                 messages.error(
-                    request, f'Amount below minimum amount of {investment_minimum} or above {investment_maximum}')
+                    request, f'Amount below minimum amount of ${investment_minimum} or above ${investment_maximum}')
             else:
                 deposits = form.save(commit=False)
                 deposits.wallet = addresses
                 deposits.user = request.user
                 deposits.save()
                 messages.success(request, 'Deposit successful and pending')
-                return redirect(to='/deposits')
+                return redirect(to='/confirm_deposits', deposit_id=deposits.id)
         else:
             messages.error(request, 'Invalid deposit')
+            
+    context = {'title': 'Add Deposit', 'form': form, 'minimum':investment_minimum, "site_name":site_name, 'usdt_eth': usdt_eth, 'usdt_trc':usdt_trc}
+    return render(request, 'deposit/deposit_form.html', context)
 
-    context = {'title': 'Deposit', 'deposits': True, 'data': deposit_history, 'form': form, 'total_actual_deposit': total_actual_deposit,
-               'total_pending': total_deposit_pending_arg, 'total_rejected': total_deposit_rejected_arg,"total_deposit":total_deposit,
-               'btcRate': btcRate, 'ethRate': ethRate, 'btc_address': btc, 'ethereum': eth,
-               'usdt_address': usdt, "last_deposit":last_deposit,"site_name":site_name
-               }
-    return render(request, 'deposit/deposits.html', context)
+def confirmDeposit(request, deposit_id):
+    site_name = settings.SITE_NAME
+    deposit = Deposit.objects.all()
+    
+    #get the amount from the last saved form
+    recent_deposit = deposit.filter(user=request.user, id=deposit_id)
+    form = DepositForm(instance=recent_deposit)
+    
+    if request.method == 'POST':
+            confirmation = DepositForm(
+                request.POST or None, instance=recent_deposit)
 
+            if confirmation.is_valid():
+                confirmation.save()
+                messages.success(
+                    request, 'Deposit successfully awaiting confirmation')
+                return redirect(to='/deposits')
+    context = {'title':'Confirm Deposit', "site_name":site_name, 'recent_deposit':recent_deposit}
+    return render(request, 'deposit/confirm_deposit.html', context)
 
-
-
-def connect():
-    try:
-        urllib.request.urlopen('http://google.com')
-        return True
-    except:
-        return False
+def cancelTransaction(request, deposit_id):
+    deposit = Deposit.objects.all()
+    #get the amount from the last saved form
+    recent_deposit = deposit.filter(user=request.user, id=deposit_id)
+    recent_deposit.rejected = True
+    recent_deposit.save()
+    return redirect(to='/deposits')
+    

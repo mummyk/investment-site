@@ -10,7 +10,10 @@ from django.contrib import admin
 # Create your models here.
 
 class Deposit(models.Model):
+    Wallet_type = ((_('Basic'), _('Basic')),
+                     (_('Copper'), _('Copper')),)
    user = models.ForeignKey(User, verbose_name=_("Users_info"), on_delete=models.CASCADE)
+   transaction_id = models.CharField(_("Transaction ID"), max_length=200, blank=True)
    wallet = models.CharField(_("Wallet ID"), max_length=200)
    amount = models.FloatField(_("Amount"))
    pending = models.BooleanField(_("Pending Transactions"), default=True)
@@ -24,10 +27,8 @@ class Deposit(models.Model):
    
 class Wallet(models.Model):
     name = models.CharField(_("Wallet name"), max_length=50)
-    bitcoin = models.CharField(_("Bitcoin Wallet"), max_length=100, blank=True)
-    etherium = models.CharField(
-        _("Etherium Wallet"), max_length=100, blank=True)
-    usdt = models.CharField(_("USDT Wallet"), max_length=100, blank=True)
+    usdt_ecr = models.CharField(_("USDT_Eth Wallet"), max_length=100, blank=True)
+    usdt_trc = models.CharField(_("USDT_TRON Wallet"), max_length=100, blank=True)
     created = models.DateTimeField(_('Created'), auto_now_add=True)
     updated = models.DateTimeField(_("updated"),  auto_now=True, blank=True)
 

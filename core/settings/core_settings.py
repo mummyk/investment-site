@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     # third party apps
     "django_htmx",
     "debug_toolbar",
+    'widget_tweaks',
+    'django_extensions',
 
     # allauth apps
     'allauth',

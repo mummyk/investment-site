@@ -65,7 +65,10 @@
         </a>
       </li>
       {% url 'deposits' as deposit_url %}
-      <li class="nav-item {% if request.get_full_path == deposit_url %} active {% endif %}">
+      {% url 'add_deposit' as add_deposit_url %}
+      {% url 'confirm_deposits' as confirm_deposits_url %}
+      {% url 'cancel_deposits' as cancel_deposits_url %}
+      <li class="nav-item {% if request.get_full_path == deposit_url %} active {% endif %} {% if request.get_full_path == add_deposit_url %} active {% endif %} {% if request.get_full_path == confirm_deposits_url %} active {% endif %} {% if request.get_full_path == cancel_deposits_url %} active {% endif %}">
         <a href="{{deposit_url}}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
@@ -119,6 +122,7 @@
     <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
       <div class="d-flex align-items-center">
         <!-- Search form -->
+        {% if request.get_full_path == transactions_url %}
         <form class="navbar-search form-inline" id="navbar-search-main">
           <div class="input-group input-group-merge search-bar">
               <span class="input-group-text" id="topbar-addon">
@@ -129,6 +133,7 @@
               <input type="text" class="form-control" id="topbarInputIconLeft" placeholder="Search Transactions by amount" aria-label="Search" aria-describedby="topbar-addon">
           </div>
         </form>
+        {% endif %}
         <!-- / Search form -->
       </div>
       <!-- Navbar links -->
