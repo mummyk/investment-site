@@ -4,7 +4,10 @@ from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from deposit.models import Deposit
-from general.models import Profit, Bonus
+from income.models import Profit, Bonus, Withdrawable
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+from django.contrib.auth.models import User
 
 # Create your views here.
 @login_required
@@ -61,3 +64,34 @@ def income(request):
    
    context = {'title': 'Income',"site_name":site_name, 'profits':profits, 'last_profit':last_profit, 'user_total_profit':user_total_profit,'expired_bonus':expired_bonus,'user_bonus':user_bonus,'all_user_bonus':all_user_bonus}
    return render(request, "income/income.html", context)
+
+
+#Edit the Withdraw able from profit
+@receiver(post_save, sender=Profit)
+def post_save_create_withdrawable(sender, instance, created, *args, **kwargs):
+    if created:
+         user = User.objects.all()
+         deposit = Deposit.objects.all()
+         for i in user:
+            user_deposit = deposit.filter(user=i, pending=False, rejected=False).aggregate(Sum('amount'))
+            user_deposit = user_deposit['amount__sum']
+            if user_deposit is None:
+               user_deposit = 0.00
+            profit = (instance.amount/100)*user_deposit
+            Withdrawable.objects.create(user=i,profit_amount=profit, profit_id=instance.id)
+            
+   
+@receiver(post_delete, sender=Profit)
+def delete_withdrawable(sender, instance, *args, **kwargs):
+   user = User.objects.all()
+   for i in user:
+      if Withdrawable.objects.filter(user=i).exists():
+         withdrawable = Withdrawable.objects.all()
+         withdrawable =withdrawable.filter(profit_id=instance.id).delete()
+               
+            
+              
+            
+@login_required
+def depositWithdrawn(request):
+   pass

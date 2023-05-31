@@ -29,3 +29,13 @@ class Withdrawal(models.Model):
         eth = re.match(ETH_ADDRESS_MATCH, self.wallet)
 
         return super().save(*args, **kwargs)
+    
+    
+class IsWithdrawalable(models.Model):
+    isWithdrawable = models.BooleanField(verbose_name=_("IsWithdrawalable"))
+    updated = models.DateTimeField(_('Updated'), auto_now=True)
+    created = models.DateTimeField(_('Created'), auto_now_add=True)
+    
+    def __str__(self):
+        return self.isWithdrawable
+    

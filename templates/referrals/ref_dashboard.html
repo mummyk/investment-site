@@ -102,8 +102,7 @@
 <div class="card border-0 shadow mb-4">
                 <div class="card-body">
                     <div class="table-responsive">
-                     {% if profits != 0 %}
-                                {% for i in profits %}
+                     
                         <table class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
                                 <tr>
@@ -114,7 +113,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               
+                               {% if profits != 0 %}
+                                {% for i in profits %}
                                 <!-- Item -->
                                 <tr>
                                     <td><a href="#" class="text-primary fw-bold">1</a> </td>
@@ -132,10 +132,7 @@
                                     </td>
                                 </tr>
                                 <!-- End of Item -->
-                               
-                            </tbody>
-                        </table>
-                          {% endfor %}
+                                {% endfor %}
                                 {% else %}
                                         <h2 class="d-flex justify-content-center fs-4 mb-3">No Profits Yet</h2>
                                         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -143,6 +140,9 @@
                                             <lottie-player  src="https://assets1.lottiefiles.com/packages/lf20_0qaHLD5frO.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
                                         </div>
                                 {% endif %}
+                            </tbody>
+                        </table>
+                         
                     </div>
                 </div>
             </div>

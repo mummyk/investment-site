@@ -10,12 +10,12 @@ from django.contrib import admin
 # Create your models here.
 
 class Deposit(models.Model):
-    WALLET_TYPE =  (
-        (_('USDT (ERC20)'), _('usdt_ecr')),
-        (_('USDT (TRC20)'), _('usdt_trc')),
+    WALLET_TYPE =  ((_("None"),_("Select a USDT Network")),
+        ('USDT (ERC20)',_('USDT (ERC20)')),
+        ('USDT (TRC20)',_('USDT (TRC20)')),
     )
     user = models.ForeignKey(User, verbose_name=_("Users_info"), on_delete=models.CASCADE)
-    transaction_id = models.CharField(_("Transaction ID"), max_length=200, blank=True)
+    transaction_id = models.CharField(_("Transaction ID"), max_length=200, blank=True, null=True)
     wallet = models.CharField(_("Wallet ID"), choices=WALLET_TYPE, max_length=200)
     amount = models.FloatField(_("Amount"))
     pending = models.BooleanField(_("Pending Transactions"), default=True)

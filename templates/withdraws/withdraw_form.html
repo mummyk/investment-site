@@ -1,20 +1,59 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center py-3">
+  <form method="POST" action="{% url 'add_deposit' %}">
+    {% csrf_token %}
+      {{form.amount}}
+      <br>
+      {{form.wallet}}
+            {% if form.errors %}
+          {% for field in form %}
+              {% for error in field.errors %}
+                  <div class="text-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+              <div class="text-danger">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+          {% endif %}
+    <button type="submit" class="btn btn-gray-800 me-2 my-3 ">{% trans "Deposit" %}</button>
+  </form>
+</div>
+{% endblock content %}
+  
+
+
+
+
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="withdraw_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{% comment %} <div class="modal fade bd-example-modal-lg" id="deposit_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Withdraw Secured</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Deposit Secured</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        
-
+        <form>
+        <div class="d-flex justify-content-center">
+          <p>Minimum amount is ${{minimum}}
+          <input class="form-control form-control-lg" type="text" placeholder="Enter Amount">
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
       </div>
+    </form>
     </div>
   </div>
-</div>
+</div> {% endcomment %}

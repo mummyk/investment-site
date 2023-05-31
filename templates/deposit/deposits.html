@@ -1,6 +1,14 @@
 {% extends 'main/base.html' %} 
 {% load static %}
 {% block content %}
+
+<style>
+   /* Style the link button */
+button a {
+    color:white
+}
+</style>
+
 <div class="py-3">
    <button class="btn btn-gray-800 d-inline-flex align-items-center me-2">
       <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -30,7 +38,7 @@
                                         Actual Deposit ${{total_actual_deposit}}
                                     </small> 
                                     <div class="small d-flex mt-1">                               
-                                        <div>last deposit<span class="text-success fw-bolder">{{last_deposit }}</span></div>
+                                        <div>last deposit:- <span class="text-success fw-bolder">{{last_deposit }}</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -100,69 +108,75 @@
 <div class="card border-0 shadow mb-4">
                 <div class="card-body">
                     <div class="table-responsive">
-                     {% if data != 0 %}
-                                {% for i in data %}
                         <table class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-0 rounded-start">#</th>
                                     <th class="border-0">Date-Time</th>
                                     <th class="border-0">Payment Type</th>
-                                    <th class="border-0">Currency</th>
+                                    <th class="border-0">Network</th>
                                     <th class="border-0">Amount</th>
+                                    <th class="border-0">Transaction ID</th>
                                     <th class="border-0">Statue</th>
                                     <th class="border-0 rounded-end">More</th>
                                 </tr>
                             </thead>
+                                
+                            
                             <tbody>
+                                {% if data != 0 %}
+                                            {% for i in data %}
+                        
                                
                                 <!-- Item -->
                                 <tr>
-                                    <td><a href="#" class="text-primary fw-bold">1</a> </td>
-                                    <td class="fw-bold d-flex align-items-center">
-                                        <svg class="icon icon-xxs text-gray-500 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
+                                    <td class="text-primary fw-bold">{{forloop.counter}}</td>
+                                    <td>
                                         {{i.created}}
                                     </td>
                                     <td>
                                         Crypto
                                     </td>
                                     <td>
-                                       USDT 
+                                       {{i.wallet}} 
                                     </td>
                                     <td>
                                        {{i.amount}}
                                     </td>
                                     <td>
+                                       {{i.transaction_id}}
+                                    </td>
+                                    <td>
                                         <div class="row d-flex align-items-center">
-                                            {% if i.Rejected == True %}
-                                    <td><span class="fw-bold text-danger">rejcted/cancel</span></td>
+                                            {% if i.rejected == True %}
+                                    <span class="fw-bold text-danger">rejcted/cancel</span>
                                     {% else %}
                                     {% if i.pending == True %}
-                                    <td><span class="fw-bold text-warning">pending</span></td>
+                                    <span class="fw-bold text-warning">pending</span>
                                     {% else %}
-                                    <td><span class="fw-bold text-success">complete</span></td>
+                                    <span class="fw-bold text-success">complete</span>
                                     {% endif %}
                                     {% endif %}
                                         </div>
                                     </td>
                                     <td >
                                         <div class="d-flex align-items-center">
-                                            <button class="btn btn-primary"> details...</button>
+                                            <button class="btn btn-primary"><a href="{% url 'deposit_details' i.id %}"> details...</a></button>
                                         </div>
                                     </td>
                                 </tr>
                                 <!-- End of Item -->
-                               
-                            </tbody>
-                        </table>
-                          {% endfor %}
+                            {% endfor %}
                                 {% else %}
-                                        <h2 class="d-flex justify-content-center fs-4 mb-3">No Transactions</h2>
+                                        <h2 class="d-flex justify-content-center fs-4 mb-3">No Deposit</h2>
                                         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
                                         <div class="d-flex justify-content-center">
                                             <lottie-player  src="https://assets1.lottiefiles.com/packages/lf20_0qaHLD5frO.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
                                         </div>
                                 {% endif %}
+                            </tbody>
+                        </table>
+                          
                     </div>
                 </div>
             </div>

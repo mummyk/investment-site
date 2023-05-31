@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+{% for i in details %}
+<style>
+   /* Style the link button */
+button a {
+    color:white
+}
+</style>
+   
+   <div class="d-flex justify-content-center py-10 ">
+      <div class="d-flex flex-column align-items-end card border-0 shadow components-section">
+         <div class="card-body">
+            
+            <p>{{i.amount}}</p>
+            <p>{{i.created}}</p>
+            <p>{{i.wallet}}</p>
+            <p>{{i.transaction_id}}</p>
+            <p>
+             {% if i.rejected == True %}
+            <span class="fw-bold text-danger">rejcted/cancel</span>
+            {% else %}
+            {% if i.pending == True %}
+            <span class="fw-bold text-warning">pending</span>
+            {% else %}
+            <span class="fw-bold text-success">complete</span>
+            {% endif %}
+            {% endif %}
+            </p>
+             <button type="button" class="btn btn-info me-2 my-3 "><a href="{% url 'deposits' %}">{% trans "Back" %}</a></button>
+             
+             {% if i.transaction_id %}
+
+            {% else %}
+            
+            {% if i.pending == False  %}
+            {% else %}
+            {% if i.rejected %}
+            {% else %}
+               <button type="submit" class="btn btn-gray-800 me-2 my-3 "><a href="{% url 'confirm_deposits' i.id %}">{% trans "Confirm" %}</a></button>
+             {% endif %}
+             {% endif %}
+             {% endif %}
+         </div>
+      </div>
+   </div>
+
+{% endfor %}
+   
+{% endblock content %}

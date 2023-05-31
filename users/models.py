@@ -12,10 +12,10 @@ from django.utils.translation import gettext as _
 
 class UserInfoModel(models.Model):
     GENDER_CHOICE = (
-        (_("Select your gender"), _("None")),
-        (_("Male"), _("MALE")),
-        (_("Female"), _("FEMALE")),
-        (_("Others"), _("OTHERS")),
+        ("None", _("Select your gender")),
+        ("MALE", _("Male")),
+        ("FEMALE", _("Female")),
+        ("OTHERS", _("Others")),
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
