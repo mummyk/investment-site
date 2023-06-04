@@ -6,6 +6,13 @@
 
 {% block content %}
 
+<style>
+   /* Style the link button */
+.text-error {
+    color:red
+}
+</style>
+
 <div class="pt-5 text-center">
     <h1>{% trans "E-mail Addresses" %}</h1>
 {% if user.emailaddress_set.all %}
@@ -65,13 +72,13 @@
                   {% if form.errors %}
           {% for field in form %}
               {% for error in field.errors %}
-                  <div class="text-danger">
+                  <div class="text-error">
                       <strong>{{ error|escape }}</strong>
                   </div>
               {% endfor %}
           {% endfor %}
           {% for error in form.non_field_errors %}
-              <div class="text-danger">
+              <div class="text-error">
                   <strong>{{ error|escape }}</strong>
               </div>
           {% endfor %}

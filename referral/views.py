@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import ReferralModel, Ref_bonus_withdrawal
+from .models import ReferralModel, Ref_withdrawal, Ref_deposit, Referral_percentage
 from deposit.models import Deposit
 from withdraw.models import Withdrawal
 from .forms import ReferralForm
@@ -7,28 +7,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # # Create your views here.
-
+my_recs = []
 
 @login_required
 def ref_dashboard(request):
     site_name = settings.SITE_NAME
-    cod = []
     total_ref = []
     amount = 0
     person = ''
-    my_recs = []
     form = ReferralForm(request.POST or None)
     if Deposit.objects.all().exists():
         deposit = Deposit.objects.all()
         ref = ReferralModel.objects.all()
         # to get the users who referred them
         for r in ref:
-            cod.append(r)
-
-        # compare if the referred user is equal to the current user
-        for r in cod:
             if request.user == r.referred:
                 my_recs.append(r.user)
         total_ref = len(my_recs)
@@ -84,11 +80,6 @@ def ref_view(request, *args, **kwargs):
     return render(request, 'referrals/ref_views.html', context)
 
 
-# TODO track confirmed deposits and link then to the referred_by user and assign 5%
-# TODO track confirmed withdrawals and link then to thr referred_by user and assign 5%
-# TODO track the withdrawn referred bonus and save to database
-
-
 # allowing referral withdraw
 def ref_withdraw(db, val):
     available_ref_balance = 0.00
@@ -122,15 +113,16 @@ def ref_bonus_withdraws(request):
 
 # referral balance
 def ref_deposit(db, val):
+    ref_percentge = Referral_percentage.objects.get(name="deposit")
     for i in val:
         if db.filter(user=i):
             j = db.filter(user=i)
-            if j.get(pending=False):
+            if j.get(pending=False, rejected=False):
                 person = i
                 amount = sum(j.filter(
                     user=i).values_list('amount', flat=True))
                 # 5% for the deposit
-                amount = amount * 0.05
+                amount = amount * ref_percentge.percentage
                 amount = round(amount, 2)
     return {'amount': amount, 'person': person}
 
@@ -141,10 +133,33 @@ def downlink(number_of_downlink=3):
         ref = ReferralModel.objects.all()
         ref_downlink = number_of_downlink
         return ref_downlink
-    
-    
-    
-    
+
+# Save for every deposit of the referred
+@receiver(post_save, sender=Deposit)
+def ref_deposit_save(sender, instance, created, *args, **kwargs):
+    if created:
+        if ReferralModel.objects.all().exists():
+            referral = ReferralModel.objects.all()
+            deposits = Deposit.objects.all()
+                        
+            # get the deposit of the referred user
+            ref_deposits = ref_deposit(deposits, my_recs)
+            person = ref_deposits['person']
+            amount = ref_deposits['amount']
+            
+            refer_by = referral.filter(user=person)
+            referred_by = refer_by.referred_by
+            
+            # Save the referred user and the amount
+            deposited_by_ref = Ref_deposit.objects.create(user=referred_by, referred_person=person, amount=amount)
+        
+# Save for every withdraw of the referred
+@receiver(post_save, sender=Withdrawal)
+def ref_withdraw_save(sender, instance, created, *args, **kwargs):
+    if created:
+        ReferralModel.objects.create(user=instance)
+        
+
 # #TODO remove this is an example
 # @login_required
 # def ref_view(request, *args, **kwargs):

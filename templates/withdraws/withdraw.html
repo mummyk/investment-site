@@ -98,10 +98,9 @@
             </div>
             
 <div class="card border-0 shadow mb-4">
-                <div class="card-body">
+    <div class="card-body">
+                    {% if data != 0 %}
                     <div class="table-responsive">
-                     {% if data != 0 %}
-                                {% for i in data %}
                         <table class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
                                 <tr>
@@ -115,6 +114,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for i in data %}
                                
                                 <!-- Item -->
                                 <tr>
@@ -153,16 +153,16 @@
                                 </tr>
                                 <!-- End of Item -->
                                
+                                {% endfor %}
+                                      {% else %}
+                                              <h2 class="d-flex justify-content-center fs-4 mb-3">No Withdraw</h2>
+                                              <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+                                              <div class="d-flex justify-content-center">
+                                                  <lottie-player  src="https://assets1.lottiefiles.com/packages/lf20_0qaHLD5frO.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+                                              </div>
+                                      {% endif %}
                             </tbody>
                         </table>
-                          {% endfor %}
-                                {% else %}
-                                        <h2 class="d-flex justify-content-center fs-4 mb-3">No Transactions</h2>
-                                        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-                                        <div class="d-flex justify-content-center">
-                                            <lottie-player  src="https://assets1.lottiefiles.com/packages/lf20_0qaHLD5frO.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
-                                        </div>
-                                {% endif %}
                     </div>
                 </div>
             </div>

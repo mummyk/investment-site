@@ -107,6 +107,7 @@ button a {
             
 <div class="card border-0 shadow mb-4">
                 <div class="card-body">
+                    {% if data != 0 %}
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
@@ -124,8 +125,7 @@ button a {
                                 
                             
                             <tbody>
-                                {% if data != 0 %}
-                                            {% for i in data %}
+                                {% for i in data %}
                         
                                
                                 <!-- Item -->

@@ -50,15 +50,47 @@ def after_user_signed_up(sender, request, user, **kwargs):
         pass
 
 
-class Ref_bonus_withdrawal(models.Model):
+class Ref_withdrawal(models.Model):
     user = models.ForeignKey(User, verbose_name=_(
         "User"), on_delete=models.CASCADE)
+    referred_person = models.CharField(max_length = 10)
     amount = models.FloatField(_("Ref withdrawal amount"), blank=True)
-    withdrawal_confirmation = models.BooleanField(
-        _("Confirmed withdraw"), default=True)
     created = models.DateTimeField(
         _("Created"),  auto_now_add=True)
     updated = models.DateTimeField(_("updated"),  auto_now=True)
+
+    def __str__(self):
+        return self.user.email
+    
+class Ref_deposit(models.Model):
+    user = models.ForeignKey(User, verbose_name=_(
+        "User"), on_delete=models.CASCADE)
+    referred_person = models.CharField(max_length = 10)
+    amount = models.FloatField(_("Ref withdrawal amount"), blank=True)
+    created = models.DateTimeField(
+        _("Created"),  auto_now_add=True)
+    updated = models.DateTimeField(_("updated"),  auto_now=True)
+
+    def __str__(self):
+        return self.user.email
+
+
+class Referral_percentage(models.Model):
+    name = models.CharField(_('name'),max_length = 10)    
+    percentage = models.FloatField(_("Refferal_percentage"))
+    created = models.DateTimeField(
+        _("Created"),  auto_now_add=True)
+    updated = models.DateTimeField(_("updated"),  auto_now=True)
+
+    def __str__(self):
+       return self.name 
+
+class Ref_withdrawal_by_user(models.Model):
+    user = models.ForeignKey(User, verbose_name=_(
+        "User"), on_delete=models.CASCADE)
+    amount = models.FloatField(_("Ref withdrawal amount"), blank=True)
+    created = models.DateTimeField(
+        _("Created"),  auto_now_add=True)
 
     def __str__(self):
         return self.user.email

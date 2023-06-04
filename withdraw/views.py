@@ -17,6 +17,8 @@ def withdraw_transaction(request):
     withdraw_history = 0.00
     total_withdraw = 0.00
     total_actual_withdraw = 0.00
+    total_withdraw_pending = 0.00
+    total_withdraw_rejected = 0.00
     site_name = settings.SITE_NAME
 
     # Get all deposit, withdraws and profit
@@ -46,7 +48,7 @@ def withdraw_transaction(request):
 
         # aggregate for all pending, rejected and actual
         # pending
-        balance = getBalance()
+        balance = getBalance(request)
 
     # withdrawal form
     context = {'title': 'Withdraw', 'withdraws': True, 'data': withdraw_history, "balance": balance,
@@ -66,7 +68,7 @@ def withdrawForm(request):
     form = WithdrawalForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            balance = getBalance()
+            balance = getBalance(request)
             amount = float(form['amount'].value())
             if amount <= balance - 3:
                 withdraw = form.save(commit=False)
@@ -85,7 +87,7 @@ def withdrawForm(request):
 
 
 @login_required
-def confirmDeposit(request, withdraw_id):
+def confirmWithdraw(request, withdraw_id):
     site_name = settings.SITE_NAME
     withdraws = Withdrawal.objects.all()
     
@@ -106,11 +108,11 @@ def cancelTransaction(request, withdraw_id):
     return redirect(to='/withdraws')
 
 @login_required
-def withdrawDetails(request, deposit_id):
+def withdrawDetails(request, withdraw_id):
     site_name = settings.SITE_NAME
     
     withdraws = Withdrawal.objects.all()
-    withdrawal_details = withdraws.filter(user=request.user, id=deposit_id)
+    withdrawal_details = withdraws.filter(user=request.user, id=withdraw_id)
     
     
     context={'title':'Withdrawal Details', "site_name":site_name, 'details':withdrawal_details}

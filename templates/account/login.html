@@ -3,6 +3,12 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 {% block content %}
 
+<style>
+   /* Style the link button */
+.text-error {
+    color:red
+}
+</style>
 
 <div class="form-modal"> 
     <div class="form-toggle">
@@ -25,13 +31,13 @@
             {% if form.errors %}
           {% for field in form %}
               {% for error in field.errors %}
-                  <div class="text-danger">
+                  <div class="text-error">
                       <strong>{{ error|escape }}</strong>
                   </div>
               {% endfor %}
           {% endfor %}
           {% for error in form.non_field_errors %}
-              <div class="text-danger">
+              <div class="text-error">
                   <strong>{{ error|escape }}</strong>
               </div>
           {% endfor %}

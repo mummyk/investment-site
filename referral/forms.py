@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Ref_bonus_withdrawal
+from .models import Ref_withdrawal_by_user
 
 
 class ReferralForm(forms.ModelForm):
@@ -8,5 +8,5 @@ class ReferralForm(forms.ModelForm):
         attrs={'class': 'title flex-1 w-full p-4  bg-gray-200 rounded-xl', 'placeholder': 'Enter amount'}))
 
     class Meta:
-        model = Ref_bonus_withdrawal
+        model = Ref_withdrawal_by_user
         fields = ['amount']

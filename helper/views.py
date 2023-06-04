@@ -2,6 +2,7 @@ from django.shortcuts import render
 from deposit.models import Deposit
 from withdraw.models import Withdrawal
 from income.models import Profit,Withdrawable
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -22,7 +23,7 @@ def handle_500_error(request):
     return render(request, "helper/500.html")
 
 
-def getBalance():
+def getBalance(request):
     balance = 0.00    
     if Deposit.objects.filter(user=request.user).exists() or Withdrawal.objects.filter(user=request.user).exists():
         deposit = Deposit.objects.all()
